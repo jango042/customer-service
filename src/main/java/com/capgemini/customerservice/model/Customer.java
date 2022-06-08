@@ -39,7 +39,7 @@ public class Customer extends Base {
   private String phoneNumber;
   private String firstname;
 
-  private String lastname;
+  private String surname;
   @JsonIgnore
   private String password;
 
