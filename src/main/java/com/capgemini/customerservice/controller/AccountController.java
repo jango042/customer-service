@@ -1,7 +1,6 @@
 package com.capgemini.customerservice.controller;
 
 
-import com.capgemini.customerservice.dto.request.AccountRequest;
 import com.capgemini.customerservice.dto.request.CreateAccountRequest;
 import com.capgemini.customerservice.dto.response.BasicResponse;
 import com.capgemini.customerservice.service.AccountService;
@@ -41,7 +40,6 @@ public class AccountController {
 
   @PostMapping("/webhook")
   public BasicResponse validateKey(@RequestHeader Map<String, String> requestHeaders) {
-    log.info("Header:::{}", requestHeaders);
     return customerService.validateTransactionKey(requestHeaders);
   }
 

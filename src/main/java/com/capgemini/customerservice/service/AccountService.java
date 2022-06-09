@@ -26,17 +26,21 @@ public class AccountService {
   public BasicResponse createCurrentAccount(CreateAccountRequest request) {
     Optional<Customer> customer = customerRepository.findByCustomerId(request.getCustomerId());
     if (customer.isPresent()) {
-      AccountRequest accountRequest = new AccountRequest();
-      accountRequest.setCustomerId(request.getCustomerId());
-      accountRequest.setFirstName(customer.get().getFirstname());
-      accountRequest.setInitialCredit(request.getInitialCredit());
-      accountRequest.setSurname(customer.get().getSurname());
-      return accountFeignClient.createAccount(accountRequest);
+      return createAccount(request, customer.get());
     } else {
       log.info("Error{}",request.getCustomerId()+" not found");
       return new BasicResponse(Status.FORBIDDEN);
     }
 
+  }
+
+  private BasicResponse createAccount(CreateAccountRequest request, Customer customer) {
+    AccountRequest accountRequest = new AccountRequest();
+    accountRequest.setCustomerId(request.getCustomerId());
+    accountRequest.setFirstName(customer.getFirstname());
+    accountRequest.setInitialCredit(request.getInitialCredit());
+    accountRequest.setSurname(customer.getSurname());
+    return accountFeignClient.createAccount(accountRequest);
   }
 
 }

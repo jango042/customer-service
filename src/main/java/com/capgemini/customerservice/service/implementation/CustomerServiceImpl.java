@@ -12,7 +12,6 @@ import com.capgemini.customerservice.enums.Status;
 import com.capgemini.customerservice.exception.ResourceNotFoundException;
 import com.capgemini.customerservice.model.Customer;
 import com.capgemini.customerservice.repository.CustomerRepository;
-import com.capgemini.customerservice.repository.RoleRepository;
 import com.capgemini.customerservice.security.service.CustomerDetailsImpl;
 import com.capgemini.customerservice.service.CustomerService;
 import com.capgemini.customerservice.util.JwtUtils;
@@ -26,16 +25,13 @@ import java.util.stream.Collectors;
 import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -123,12 +119,8 @@ public class CustomerServiceImpl implements CustomerService {
     return new BasicResponse(Status.SUCCESS, customerOperationResponse);
   }
 
-
   private boolean emailExists(String email) {
     return customerRepository.existsByEmail(email);
   }
-
-
-
 
 }
