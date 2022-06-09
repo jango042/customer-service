@@ -4,7 +4,7 @@ VOLUME /tmp
 
 EXPOSE 8004
 
-RUN mvn install
+RUN mvn clean install
 
 ADD target/*.jar customer-service.jar
 
