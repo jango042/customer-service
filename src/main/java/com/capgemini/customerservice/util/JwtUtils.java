@@ -25,9 +25,11 @@ public class JwtUtils {
   @Value("${capgemini.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
+
   public String generateJwtToken(Authentication authentication) {
 
     CustomerDetailsImpl userPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
+
 
     return Jwts.builder()
         .setSubject((userPrincipal.getUsername()))
