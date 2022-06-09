@@ -4,7 +4,7 @@ VOLUME /tmp
 
 EXPOSE 8004
 
-ADD target/*.jar customer-service.jar
+ADD ./target/customer-service.jar /customer-service.jar
 
 ENV JAVA_OPTS=""
 
