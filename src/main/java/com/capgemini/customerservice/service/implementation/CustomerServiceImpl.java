@@ -1,15 +1,24 @@
 package com.capgemini.customerservice.service.implementation;
 
+import com.capgemini.customerservice.config.client.AccountFeignClient;
+import com.capgemini.customerservice.config.client.TransactionFeignClient;
 import com.capgemini.customerservice.dto.request.LoginRequest;
+import com.capgemini.customerservice.dto.response.AccountResponse;
 import com.capgemini.customerservice.dto.response.BasicResponse;
+import com.capgemini.customerservice.dto.response.CustomerOperationResponse;
 import com.capgemini.customerservice.dto.response.JwtResponse;
+import com.capgemini.customerservice.dto.response.TransactionResponse;
 import com.capgemini.customerservice.enums.Status;
+import com.capgemini.customerservice.exception.ResourceNotFoundException;
 import com.capgemini.customerservice.model.Customer;
 import com.capgemini.customerservice.repository.CustomerRepository;
 import com.capgemini.customerservice.repository.RoleRepository;
 import com.capgemini.customerservice.security.service.CustomerDetailsImpl;
 import com.capgemini.customerservice.service.CustomerService;
 import com.capgemini.customerservice.util.JwtUtils;
+import com.google.gson.Gson;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -17,7 +26,10 @@ import java.util.stream.Collectors;
 import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,11 +45,11 @@ public class CustomerServiceImpl implements CustomerService {
 
   private final CustomerRepository customerRepository;
 
-  private final RoleRepository roleRepository;
-
   private final AuthenticationManager authenticationManager;
 
-  private final PasswordEncoder passwordEncoder;
+  private final AccountFeignClient accountFeignClient;
+
+  private final TransactionFeignClient transactionFeignClient;
 
   @Value("${capgemini.customer.secret.key}")
   private String secretKey;
@@ -83,6 +95,32 @@ public class CustomerServiceImpl implements CustomerService {
       log.error("There was an error while updating customer: {}", e.getMessage());
       return new BasicResponse(Status.FORBIDDEN);
     }
+  }
+
+  @Override
+  public BasicResponse getDetails(String customerId) {
+    return customerRepository.findByCustomerId(customerId).map(customer -> {
+      BasicResponse accountList = accountFeignClient.getCustomerAccounts(customerId);
+      BasicResponse transactionList = transactionFeignClient.getCustomerTransactions(customerId);
+      Gson gson = new Gson();
+      Type accountListType = new TypeToken<ArrayList<AccountResponse>>(){}.getType();
+      Type transactionListType = new TypeToken<ArrayList<TransactionResponse>>(){}.getType();
+
+      List<AccountResponse> accountResponses = gson.fromJson(accountList.getResponseData().toString(), accountListType);
+      List<TransactionResponse> transactionResponses = gson.fromJson(transactionList.getResponseData().toString(), transactionListType);
+      return getCustomerOperationResponse(customer, accountResponses, transactionResponses);
+    }).orElseThrow(() -> new ResourceNotFoundException("CustomerId provided not found"));
+
+  }
+
+  private BasicResponse getCustomerOperationResponse(Customer customer,
+      List<AccountResponse> accountResponses, List<TransactionResponse> transactionResponses) {
+    CustomerOperationResponse customerOperationResponse = new CustomerOperationResponse();
+    customerOperationResponse.setFirstName(customer.getFirstname());
+    customerOperationResponse.setSurname(customer.getSurname());
+    customerOperationResponse.setAccountList(accountResponses);
+    customerOperationResponse.setTransactionList(transactionResponses);
+    return new BasicResponse(Status.SUCCESS, customerOperationResponse);
   }
 
 

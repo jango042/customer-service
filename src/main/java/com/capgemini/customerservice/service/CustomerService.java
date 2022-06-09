@@ -8,5 +8,6 @@ public interface CustomerService {
 
   BasicResponse authenticateCustomer(LoginRequest customerDetails);
   BasicResponse validateTransactionKey(Map<String, String> requestHeaders);
+  BasicResponse getDetails(String customerId);
 
 }
