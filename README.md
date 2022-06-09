@@ -1,12 +1,12 @@
 # customer-service
 
-Steps to run this project:
 
+## Steps to run this project:
 
-Build
+# Build
 
-mvn clean install -DskipTests=true
+> mvn clean install -DskipTests=true
 
-Run the app
+# Run the app
 
-mvn spring-boot:run
+> mvn spring-boot:run
