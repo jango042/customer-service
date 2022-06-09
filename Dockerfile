@@ -4,8 +4,6 @@ VOLUME /tmp
 
 EXPOSE 8004
 
-RUN mvn clean install
-
 ADD target/*.jar customer-service.jar
 
 ENV JAVA_OPTS=""
