@@ -50,7 +50,7 @@ public class AppInitializer implements ApplicationRunner {
   private void seedCustomer() {
     String email = "jangoo042@gmail.com";
     String customerId = "35647-898475-09405";
-    if (!customerRepository.existsByEmail(email)) {
+    if (Boolean.FALSE.equals(customerRepository.existsByEmail(email))) {
       Set<Role> roles = new HashSet<>();
       Role customerRole = roleRepository.findByName(RoleType.USER)
           .orElseThrow(() -> new ResourceNotFoundException("Error: Role not found."));
@@ -61,7 +61,7 @@ public class AppInitializer implements ApplicationRunner {
       Customer customer = new Customer();
       customer.setCustomerId(customerId);
       customer.setFirstname("Jango");
-      customer.setLastname("Amalu");
+      customer.setSurname("Amalu");
       customer.setEmail("jangoo042@gmail.com");
       customer.setPassword(passwordEncoder.encode("password"));
       customer.setRoles(roles);

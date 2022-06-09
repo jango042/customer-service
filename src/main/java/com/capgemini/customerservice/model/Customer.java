@@ -38,7 +38,6 @@ public class Customer extends Base {
   private String email;
   private String phoneNumber;
   private String firstname;
-
   private String surname;
   @JsonIgnore
   private String password;

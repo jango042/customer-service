@@ -10,13 +10,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountRequest {
-
+public class CreateAccountRequest {
   @NotBlank(message = "Customer Id cannot be blank")
   private String customerId;
   @NotBlank(message = "Initial Credit cannot be blank")
   private Double initialCredit;
-  private String firstName;
-  private String surname;
 
 }
