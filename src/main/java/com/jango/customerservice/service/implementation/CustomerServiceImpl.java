@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 
   private final TransactionFeignClient transactionFeignClient;
 
-  @Value("${capgemini.customer.secret.key}")
+  @Value("${jango.customer.secret.key}")
   private String secretKey;
 
   private final JwtUtils jwtUtils;

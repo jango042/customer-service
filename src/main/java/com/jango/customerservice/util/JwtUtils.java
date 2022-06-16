@@ -19,10 +19,10 @@ import org.springframework.util.StringUtils;
 @Component
 public class JwtUtils {
 
-  @Value("${capgemini.app.jwtSecret}")
+  @Value("${jango.app.jwtSecret}")
   private String jwtSecret;
 
-  @Value("${capgemini.app.jwtExpirationMs}")
+  @Value("${jango.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
 
